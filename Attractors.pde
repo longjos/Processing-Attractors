@@ -9,8 +9,12 @@ int sizeX, sizeY ;
 int gridSizeX, gridSizeY;
  
 Attractor gF[] = new Attractor[3];
-Planet pl[] = new Planet[1];
+Planet pl[] = new Planet[1000];
 Grid grid;
+
+boolean showAccelerationVectors = false;
+
+Attractor sun;
  
 boolean showAttractorLabel = true;
  
@@ -19,7 +23,7 @@ boolean RESET = false;
  
 void setup(){
   if(! RESET){
-    //size(800, 600, OPENGL);
+  //  size(800, 600, OPENGL);
     size(1200, 800, P3D);
      
     sizeX = width; sizeY = height;
@@ -61,10 +65,13 @@ void setup(){
     float radius = random(20, 40);
     color col = color( random(200,255), random(200,255),  random(1));
     Attractor nextAttractor = new Attractor(id, new PVector(x,y), radius, col);
-    nextAttractor.setDensity(300);
+    nextAttractor.setDensity(15);
     //nextAttractor.setMinimumDistance(100);
     gF[i] = nextAttractor;
   } // end for i
+  
+  this.sun = new Attractor(99, new PVector((width/2), (height/2)), 1, color(200,200,1));
+  this.sun.setDensity(5);
    
   //------------------------------------------------------------------------------------------
   // initialize Planets
@@ -75,7 +82,7 @@ void setup(){
     float radius = random(5,10);
     color col = color( random(110, 255), random(110, 255),  random(110, 220));
     Planet newPlanet = new Planet(id, initialLocation, initialVelocity, radius, col);
-    newPlanet.setMaxSpeed(50);
+    newPlanet.setMaxSpeed(100);
     newPlanet.assignAttractor(gF[0]);
     pl[i] = newPlanet;
   } // end for i
@@ -102,13 +109,19 @@ void draw(){
     //for(int j = 0; j < gF.length; j++)
     //{
     //  PVector accel = gF[j].getForce(pl[i].currentLocation);
-    //  pl[i].addAcceleration(accel);
+    // pl[i].addAcceleration(accel);
     //};
     
     // Use my assigned Attractor and apply the force
  
      PVector accel = pl[i].assignedAttractor.getForce(pl[i].currentLocation);
      pl[i].addAcceleration(accel);
+    
+    
+    // Add a constant acceleration to help control the system
+    
+    PVector normalAcceleration = this.sun.getForce(pl[i].currentLocation);
+    pl[i].addAcceleration(normalAcceleration);
     
     //for(int j = 0; j < pl.length; j++){ if( j != i) pl[i].setNewDirection(pl[j].x, pl[j].y, pl[j].radius, 2000, 1); }
 

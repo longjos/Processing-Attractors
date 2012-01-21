@@ -10,6 +10,9 @@ class Planet{
   PVector currentVelocity = new PVector(0,0);
   PVector currentLocation = new PVector(0,0);
   
+  boolean showAccelerationVectors = false;
+  
+  
   Attractor assignedAttractor;
   
   Planet(int id, PVector location, PVector initialVelocity, float radius, color col){
@@ -49,11 +52,18 @@ class Planet{
     PVector totalAcceleration = new PVector(0,0);
    for(int i = 0; i < this.accelerationToApply.size(); i++)
    {
-     totalAcceleration.add((PVector) accelerationToApply.get(i));
+     PVector forceVector = (PVector) accelerationToApply.get(i);
+     totalAcceleration.add(forceVector);
+     if(this.showAccelerationVectors)
+     {
+       stroke(200,200,1); 
+       line(this.currentLocation.x, this.currentLocation.y, this.currentLocation.z, (this.currentLocation.x + forceVector.x), (this.currentLocation.y + forceVector.y), (this.currentLocation.z + forceVector.z));
+     }
    } 
-    
+    //totalAcceleration.limit(100);
     this.currentVelocity.add(totalAcceleration); 
     this.currentVelocity.limit(this.maxSpeed);
+    this.accelerationToApply.clear();
   }
   
   void calculatePosition()
@@ -68,12 +78,14 @@ class Planet{
 void drawPSphere(){
     fill(col);  
     //stroke(col);
-    //noStroke();
+    noStroke();
     pushMatrix();
       translate(this.currentLocation.x, this.currentLocation.y, this.currentLocation.z);
       sphereDetail(25);
       sphere(radius);
       //ellipse(0,0, radius, radius);
+      
+      //point(0,0,0);
     popMatrix();
   } // end void draw
    
