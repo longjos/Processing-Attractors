@@ -5,6 +5,7 @@ class Attractor{
   float density = 1;
   color col;
   boolean isSelected;
+  float minimumDistance = 0;
    
   Attractor(int id, PVector location, float radius, color col){
     this.id     = id;
@@ -16,6 +17,15 @@ class Attractor{
   void setDensity(float density)
   {
     this.density = density;
+  }
+  
+  /*
+  * Set a distance at which the attractors force will result in 
+  * a vector 90 degrees from the approach angle. This will allow for 'orbits'
+  */
+  void setMinimumDistance(float minimumDistance)
+  {
+    this.minimumDistance = minimumDistance;
   }
      
   void setSelectionState(boolean isSelectedNew){
@@ -33,9 +43,23 @@ class Attractor{
     PVector force = PVector.sub(this.location, target);
     // Using the distance of the force vector determine the correct magnitude
     float distance = force.mag();
-    float forceMagnitude = this.density / pow(distance, .1);
+
+    float forceMagnitude = this.density / pow(distance, .9);
+    println(forceMagnitude);
     force.normalize();
     force.mult(forceMagnitude);
+    
+    // if we have a minimum distance and are within that distance
+    // redirect the particle
+    if(this.minimumDistance > 0 && distance < this.minimumDistance)
+    {
+      float theta = atan2(force.y, force.x);
+      theta = radians(degrees(theta) + 45);
+      force.x = cos(theta) * force.x + sin(theta) * force.y;
+      force.y = cos(theta) * force.y - sin(theta) * force.x; 
+      force.mult(this.density / pow(distance, 2));
+    }
+
     return force;
   }
    

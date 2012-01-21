@@ -9,7 +9,7 @@ int sizeX, sizeY ;
 int gridSizeX, gridSizeY;
  
 Attractor gF[] = new Attractor[3];
-Planet pl[] = new Planet[100];
+Planet pl[] = new Planet[1];
 Grid grid;
  
 boolean showAttractorLabel = true;
@@ -62,6 +62,7 @@ void setup(){
     color col = color( random(200,255), random(200,255),  random(1));
     Attractor nextAttractor = new Attractor(id, new PVector(x,y), radius, col);
     nextAttractor.setDensity(300);
+    //nextAttractor.setMinimumDistance(100);
     gF[i] = nextAttractor;
   } // end for i
    
@@ -69,13 +70,13 @@ void setup(){
   // initialize Planets
   for(int i = 0; i < pl.length; i++){
     int id       = i;
-    PVector initialLocation = new PVector(random(border, gridSizeX-border), random(border, gridSizeY-border), random(0, 100));
+    PVector initialLocation = new PVector(random(border, gridSizeX-border), random(border, gridSizeY-border), random(0, 600));
     PVector initialVelocity = new PVector(random(0,3), random(0,1));
     float radius = random(5,10);
     color col = color( random(110, 255), random(110, 255),  random(110, 220));
     Planet newPlanet = new Planet(id, initialLocation, initialVelocity, radius, col);
-    newPlanet.setMaxSpeed(10);
-    //newPlanet.assignAttractor(gF[0]);
+    newPlanet.setMaxSpeed(50);
+    newPlanet.assignAttractor(gF[0]);
     pl[i] = newPlanet;
   } // end for i
       
@@ -89,7 +90,7 @@ void setup(){
    
  
 void draw(){
-  println(frameRate);
+  //println(frameRate);
   background(0); noLights();
  
  

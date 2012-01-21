@@ -51,6 +51,7 @@ class Planet{
    {
      totalAcceleration.add((PVector) accelerationToApply.get(i));
    } 
+    
     this.currentVelocity.add(totalAcceleration); 
     this.currentVelocity.limit(this.maxSpeed);
   }
@@ -66,11 +67,13 @@ class Planet{
    
 void drawPSphere(){
     fill(col);  
-    noStroke();
+    //stroke(col);
+    //noStroke();
     pushMatrix();
       translate(this.currentLocation.x, this.currentLocation.y, this.currentLocation.z);
       sphereDetail(25);
       sphere(radius);
+      //ellipse(0,0, radius, radius);
     popMatrix();
   } // end void draw
    
