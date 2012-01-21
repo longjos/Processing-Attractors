@@ -77,15 +77,16 @@ class Planet{
    
 void drawPSphere(){
     fill(col);  
-    //stroke(col);
-    noStroke();
+    stroke(col);
+    strokeWeight(2);
+    //noStroke();
     pushMatrix();
       translate(this.currentLocation.x, this.currentLocation.y, this.currentLocation.z);
-      sphereDetail(25);
-      sphere(radius);
+      //sphereDetail(25);
+      //sphere(radius);
       //ellipse(0,0, radius, radius);
       
-      //point(0,0,0);
+      point(0,0,0);
     popMatrix();
   } // end void draw
    

@@ -44,7 +44,7 @@ class Attractor{
     // Using the distance of the force vector determine the correct magnitude
     float distance = force.mag();
 
-    float forceMagnitude = (this.density * this.density) / pow(distance, .5);
+    float forceMagnitude = (this.density) / pow(distance, .5);
     force.normalize();
     force.mult(forceMagnitude);
     

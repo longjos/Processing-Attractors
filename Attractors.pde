@@ -9,7 +9,7 @@ int sizeX, sizeY ;
 int gridSizeX, gridSizeY;
  
 Attractor gF[] = new Attractor[3];
-Planet pl[] = new Planet[1000];
+Planet pl[] = new Planet[10000];
 Grid grid;
 
 boolean showAccelerationVectors = false;
@@ -24,7 +24,7 @@ boolean RESET = false;
 void setup(){
   if(! RESET){
   //  size(800, 600, OPENGL);
-    size(1200, 800, P3D);
+    size(800, 800, P3D);
      
     sizeX = width; sizeY = height;
     gridSizeX = int((sizeX + sizeY)/2) ;
@@ -37,23 +37,6 @@ void setup(){
     cam.setMaximumDistance(50000);
     cam.setRotations( -0.7301672, -0.274728, 0.30156484);
   } // end if(! RESET)
-   
-  //------------------------------------------------------------------------------------------
-  // initialize Grid
-  int res = 7;
-  int gridPointsX = gridSizeX / res;
-  int gridPointsY = gridSizeY / res;
-  grid = new Grid(gridPointsX, gridPointsY);
-  float s = 1.5; // scale Grid
-  for(int i = 0; i < gridPointsY; i++){
-    for(int j = 0; j < gridPointsX; j++){
-      int index = i*gridPointsX + j;
-      float x = j * res * s + (sizeX - gridSizeX*s) / 2;
-      float y = i * res * s + (sizeY - gridSizeY*s) / 2;
-      float z = 0;
-      grid.setGridPoint(index, x, y, z);
-    } // end for j
-  } // end for i
     
   int border = 0;
   //------------------------------------------------------------------------------------------
@@ -65,13 +48,13 @@ void setup(){
     float radius = random(20, 40);
     color col = color( random(200,255), random(200,255),  random(1));
     Attractor nextAttractor = new Attractor(id, new PVector(x,y), radius, col);
-    nextAttractor.setDensity(15);
+    nextAttractor.setDensity(100);
     //nextAttractor.setMinimumDistance(100);
     gF[i] = nextAttractor;
   } // end for i
   
-  this.sun = new Attractor(99, new PVector((width/2), (height/2)), 1, color(200,200,1));
-  this.sun.setDensity(5);
+  this.sun = new Attractor(99, new PVector((width/2), 0), 1, color(200,200,1));
+  this.sun.setDensity(10);
    
   //------------------------------------------------------------------------------------------
   // initialize Planets
@@ -82,7 +65,7 @@ void setup(){
     float radius = random(5,10);
     color col = color( random(110, 255), random(110, 255),  random(110, 220));
     Planet newPlanet = new Planet(id, initialLocation, initialVelocity, radius, col);
-    newPlanet.setMaxSpeed(100);
+    newPlanet.setMaxSpeed(50);
     newPlanet.assignAttractor(gF[0]);
     pl[i] = newPlanet;
   } // end for i
@@ -123,28 +106,19 @@ void draw(){
     PVector normalAcceleration = this.sun.getForce(pl[i].currentLocation);
     pl[i].addAcceleration(normalAcceleration);
     
-    //for(int j = 0; j < pl.length; j++){ if( j != i) pl[i].setNewDirection(pl[j].x, pl[j].y, pl[j].radius, 2000, 1); }
-
     pl[i].calculatePosition();
 
 
-    //if(frameCount % 500 == 0)
-    //{
-    //  pl[i].assignAttractor(gF[1]);
-    //}
+    if(frameCount % 500 == 0)
+    {
+      pl[i].assignAttractor(gF[2]);
+    }
     
   } // end for i
    
  
-  // calculate the grid deformation
-  grid.REsetGridPointPositionZ();
-  for(int i = 0; i < gF.length; i++) grid.setGridPointPositionZ( gF[i].location.x, gF[i].location.y, gF[i].radius ); 
-  for(int i = 0; i < pl.length; i++) grid.setGridPointPositionZ( pl[i].x, pl[i].y, pl[i].radius ); 
- 
- 
-  //grid.drawGrid();                                                                 // draw grid
+
   for(int i = 0; i < gF.length; i++) gF[i].drawSphere(20, 30);                     // draw Attractors
-  //for(int i = 0; i < pl.length; i++) pl[i].drawSphere(10, 20);                     // draw Planets
   for(int i = 0; i < pl.length; i++) pl[i].drawPSphere();
   
   if (showAttractorLabel) for(int i = 0; i < gF.length; i++) gF[i].drawLabel(); // draw AttractorsLabel
